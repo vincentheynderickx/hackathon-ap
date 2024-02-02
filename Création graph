@@ -1,0 +1,11 @@
+import osmnx as ox
+
+# définition de l'adresse et des paramètres
+address = "60 boulevard Saint-Michel Paris France"
+dist = 2000  # mètres
+dist_type = "network"
+network_type = "drive"
+
+# Création du graph
+G = ox.graph_from_address(address, dist=dist, dist_type=dist_type, network_type=network_type)
+fig, ax = ox.plot_graph(ox.project_graph(G))
