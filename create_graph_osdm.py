@@ -34,10 +34,13 @@ def get_graph_destinations(G=G2, station=station, destinations=destinations, con
             if origin_name != destination_name:
                 origine = osmnx.distance.nearest_nodes(G, X=concatenate[origin_name][0], Y=concatenate[origin_name][1])
                 destination = osmnx.distance.nearest_nodes(G, X=concatenate[destination_name][0], Y=concatenate[destination_name][1])
-                route = osmnx.shortest_path(G, origine, destination)
+                route = osmnx.shortest_path(G, origine, destination, weight="length")
                 edge_lengths = osmnx.utils_graph.get_route_edge_attributes(G2, route, attribute="length")
                 graph_lenghths[conversion_name_index[origin_name], conversion_name_index[destination_name]] = np.sum(edge_lengths)
                 graph_routes[(origin_name, destination_name)] = route
     return graph_lenghths, graph_routes
 
+# %%
+
+get_graph_destinations(G=G2)
 # %%
