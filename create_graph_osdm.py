@@ -25,9 +25,10 @@ G2 = osmnx.graph_from_address(address="60 boulevard Saint-Michel, Paris, France"
                               network_type="drive",) 
 
 #%%
-def get_graph_destinations(G, station, destinations, conversion_name_index, conversion_index_name):
+def get_graph_destinations(G=G2, station=station, destinations=destinations, conversion_name_index=conversion_name_index, conversion_index_name=conversion_index_name):
     concatenate = {**station, **destinations}
-    graph = np.zeros((len(concatenate), len(concatenate)))
+    graph_lenghths = np.zeros((len(concatenate), len(concatenate)))
+    graph_routes = {}
     for origin_name in tqdm(concatenate):
         for destination_name in concatenate:
             if origin_name != destination_name:
@@ -35,9 +36,8 @@ def get_graph_destinations(G, station, destinations, conversion_name_index, conv
                 destination = osmnx.distance.nearest_nodes(G, X=concatenate[destination_name][0], Y=concatenate[destination_name][1])
                 route = osmnx.shortest_path(G, origine, destination)
                 edge_lengths = osmnx.utils_graph.get_route_edge_attributes(G2, route, attribute="length")
-                graph[conversion_name_index[origin_name], conversion_name_index[destination_name]] = np.sum(edge_lengths)
-    return graph   
+                graph_lenghths[conversion_name_index[origin_name], conversion_name_index[destination_name]] = np.sum(edge_lengths)
+                graph_routes[(origin_name, destination_name)] = route
+    return graph_lenghths, graph_routes
 
 # %%
-
-graph = get_graph_destinations(G2, station, destinations)
